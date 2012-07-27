@@ -66,9 +66,12 @@ __status__ = "Production"
 ################################################
 # Globals
 
-DEBUG = False
+DEBUG   = False
 VERBOSE = False
-QUIET = False
+QUIET   = False
+
+PLFM_WIN7 = False
+PLFM_OSX  = False
 
 impt_lib_dir = None
 main_lib_dir = None
@@ -294,23 +297,27 @@ def set_options ():
     """Parse command-line arguments and set logging level"""
     global DEBUG, VERBOSE, QUIET, impt_lib_dir, logging
     # Parse arguments
-    import argparse
-    parser = argparse.ArgumentParser(
-        #description="Merges a given Lytro library to user's main Lytro library.")
-        description=__doc__.splitlines()[1])
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='Enable debug mode')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='Enable verbose mode')
-    parser.add_argument('-q', '--quiet', action='store_true',
-                        help='Enable quiet mode')
-    parser.add_argument('impt_lib', metavar='importing-library', type=str, nargs='?',
-                        help='Path to importing library')
-    args = parser.parse_args()
-    DEBUG = args.debug
-    VERBOSE = args.verbose
-    QUIET = args.quiet
-    impt_lib_dir = args.impt_lib
+    try:
+        import argparse
+        parser = argparse.ArgumentParser(
+            #description="Merges a given Lytro library to user's main Lytro library.")
+            description=__doc__.splitlines()[1])
+        parser.add_argument('-d', '--debug', action='store_true',
+                            help='Enable debug mode')
+        parser.add_argument('-v', '--verbose', action='store_true',
+                            help='Enable verbose mode')
+        parser.add_argument('-q', '--quiet', action='store_true',
+                            help='Enable quiet mode')
+        parser.add_argument('impt_lib', metavar='importing-library', type=str, nargs='?',
+                            help='Path to importing library')
+        args = parser.parse_args()
+        DEBUG = args.debug
+        VERBOSE = args.verbose
+        QUIET = args.quiet
+        impt_lib_dir = args.impt_lib
+    except:
+        #TODO fall-back to optparse or manual parsing
+        pass
     # Set logging level
     #logging.basicConfig(level=logging.WARNING, format='%(message)s')
     if DEBUG:
@@ -324,11 +331,16 @@ def set_options ():
 
 def set_preferences ():
     """Find the directory paths for the libraries, based on the OS"""
-    global main_lib_dir, impt_lib_dir
+    global PLFM_WIN7, PLFM_OSX, main_lib_dir, impt_lib_dir
+
+    PLFM_WIN7 = sys.platform == 'win32'
+    PLFM_OSX  = sys.platform == 'darwin'
 
     # Main library
-    if sys.platform == 'win32':
+    if PLFM_WIN7:
         main_lib_dir =  os.path.join(os.environ["LOCALAPPDATA"], "Lytro")
+    elif PLFM_OSX:
+        main_lib_dir =  os.path.join(os.environ["HOME"], "Pictures", "Lytro.lytrolib")
     else:
         raise Exception("Sorry, your operating system is not supported yet!")
 
@@ -336,8 +348,10 @@ def set_preferences ():
     if impt_lib_dir:
         dirname = impt_lib_dir
     else:
-        if sys.platform == 'win32':
+        if PLFM_WIN7:
             init_dir = os.path.join(os.environ["HOMEPATH"], "Desktop")
+        elif PLFM_OSX:
+            init_dir = os.path.join(os.environ["HOME"], "Desktop")
         else:
             raise Exception("Sorry, your operating system is not supported yet!")
         try:
@@ -347,7 +361,10 @@ def set_preferences ():
             toplevel = Tk()
             toplevel.withdraw()
             output('Please browse to the importing library folder.')
-            dirname = tkFileDialog.askdirectory(initialdir=init_dir)
+            if PLFM_WIN7:
+                dirname = tkFileDialog.askdirectory(initialdir=init_dir)
+            elif PLFM_OSX:
+                dirname = tkFileDialog.askopenfilename(initialdir=init_dir)
         except:
             # Failed by any reason, try asking in the console
             output('Enter path to importing library')
@@ -366,7 +383,7 @@ def output(text=""):
 
 def exit (exitcode):
     """Exit, keeping the console window open waiting for user input"""
-    if sys.platform == 'win32':
+    if PLFM_WIN7:
         print
         raw_input("Press any key to exit...")
     sys.exit(exitcode)
