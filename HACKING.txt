@@ -1,0 +1,11 @@
+
+Lytro Library Merger
+====================
+
+Fork me on GitHub: https://github.com/behnam/lytro_library_merger
+
+At the moment, only Windows 7 is supported. A little work is needed to
+make it work for Mac OS X. Let me know if you do so!
+
+The only software dependency is Python 2.7.  Get it from http://www.python.org/getit/
+
