@@ -3,6 +3,8 @@ Lytro Library Merger
 
 Merges all photos of a Lytro library to user's main Lytro library.
 
+Homepage: http://behnam.github.com/lytro_library_merger/
+
 **BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION!**
 
 Given a Lytro photo library, this application merges/imports all

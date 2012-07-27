@@ -2,6 +2,8 @@
 #
 # Lytro Library Merger
 # Merges all photos of a Lytro library to user's main Lytro library.
+#
+# Homepage: http://behnam.github.com/lytro_library_merger/
 # Copyright (C) 2012  Behnam Esfahbod
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,7 +39,7 @@ on this, so PLEASE BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION!
 At the moment, only Windows 7 is supported. A little work is needed to
 make it work for Mac OS X. Let me know if you do so!
 
-Project homepage: https://github.com/behnam/lytro_library_merger
+Project homepage: http://behnam.github.com/lytro_library_merger/
 
 Lytro (R) is a trademark of LYTRO, INC.  This application is not affiliated
 with LYTRO, INC. (http://www.lytro.com/)
