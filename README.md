@@ -15,15 +15,38 @@ This application does its best to prevent any damage to your photo library
 and revent the changes when something goes wrong. But you should not count
 on this, so PLEASE BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION!
 
-Run It
-------
+Run It in Windows 7
+-------------------
 
-At the moment, only Windows 7 is supported. A little work is needed to
-make it work for Mac OS X. Let me know if you do so!
+The only requirement is Python (preferably version 2.7).
+If you don't have Python, get the Windows Installer from
+http://www.python.org/getit/, run it, and follow the instructions.
 
-Requires only Python 2.7.  Get it from http://www.python.org/getit/
+Now, download the zipball, upzip it somewhere, and run
+`lytro_library_merger.py` from the Windows Explorer by double-cliking on it.
+You will be asked to browse to the importing Lytro photo library.
 
-Run `lytro_library_merger.py` and browse to the imporing Lytro photo library.
+Run It in Max OS X
+------------------
+
+Python is installed by default in recent Mac OS X machines.
+If you don't have Python, get the Mac OS X Installer from
+http://www.python.org/getit/, run it, and follow the instructions.
+
+Now, download the zipball, upzip it somewhere. Select the file
+`lytro_library_merger.py` in Finder, click on the `More info...`
+button, in section "Open with" select "Python Launcher.app" from
+the drop-down list. Close the info box and double-click on the file.
+You will be asked to browse to the importing Lytro photo library.
+
+Run It in Command-line
+----------------------
+
+In both Windows 7 and Mac OS X, 
+you can also run it throw the command-line, setting the importing photo
+library path directly. Use `-h` or `--help` to see more options.
+
+*NOTE: command-line support requires Python 2.7.*
 
 Contributing
 ------------
@@ -40,4 +63,6 @@ under certain conditions; see file HACKING for details.
 
 This application is not affiliated with LYTRO, INC.
 Lytro (R) is a trademark of LYTRO, INC. (http://www.lytro.com/)
+
+Copyright (C) 2012  Behnam Esfahbod.
 
