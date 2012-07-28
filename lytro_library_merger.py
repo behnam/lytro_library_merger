@@ -3,8 +3,7 @@
 # Lytro Library Merger
 # Merges all photos of a Lytro library to user's main Lytro library.
 #
-# Homepage: http://behnam.github.com/lytro_library_merger/
-# Copyright (C) 2012  Behnam Esfahbod
+# http://behnam.github.com/lytro_library_merger/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,14 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Lytro (R) is a trademark of LYTRO, INC.  This application is not affiliated
-# with LYTRO, INC. (http://www.lytro.com/)
-
+# Copyright (C) 2012  Behnam Esfahbod
 
 """
 Merges all photos of a Lytro library to user's main Lytro library.
 
-*** BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION! ***
+**BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION!**
 
 Given a Lytro photo library, this application merges/imports all
 Lytro photos and metadatas from the given library to user's main library,
@@ -36,13 +33,10 @@ This application does its best to prevent any damage to your photo library
 and revent the changes when something goes wrong. But you should not count
 on this, so PLEASE BACKUP YOUR LYTRO LIBRARY BEFORE RUNNING THIS APPLICATION!
 
-At the moment, only Windows 7 is supported. A little work is needed to
-make it work for Mac OS X. Let me know if you do so!
+Homepage: http://behnam.github.com/lytro_library_merger/
 
-Project homepage: http://behnam.github.com/lytro_library_merger/
-
-Lytro (R) is a trademark of LYTRO, INC.  This application is not affiliated
-with LYTRO, INC. (http://www.lytro.com/)
+Not affiliated with LYTRO, INC.  Lytro (R) is a trademark of LYTRO, INC.
+(http://www.lytro.com/)
 """
 
 import sys
@@ -146,7 +140,6 @@ def merge_table (table_name, num_cols, new_ids=True,
                   ")")
 
     for idx, row in enumerate(c1.execute(select_sql)):
-
         # Insert data
         id = row[0]
         data = list(row)
@@ -161,14 +154,12 @@ def merge_table (table_name, num_cols, new_ids=True,
                 error_cb(idx, row, data)
             logging.debug("    %s: row passed (%s)", table_name, id)
             continue
-
         # Store new id
         new_id = c2.lastrowid
         if not table_name in id_map: id_map[table_name] = {}
         id_map[table_name][id] = new_id
         if post_update_cb:
             post_update_cb(idx, row, data, new_id)
-
         # Row done
         if new_ids:
             logging.debug("    %s: row created (%s -> %s)", table_name, id, new_id)
@@ -194,6 +185,34 @@ def pictures_post_update(idx, row, data, new_id):
     pics.append(pic)
     return True
 
+
+################################################
+# Housekeeping
+
+def housekeeping ():
+    """Keeping the new database sane, as much as possible"""
+    delete_empty_events()
+
+def delete_empty_events ():
+    """Find and remove empty `events` tables,
+    cause by possible duplicate files"""
+    global conn2
+    c2 = conn2.cursor()
+    logging.debug("Deleting empty new events...")
+    select_sql = """SELECT events.eid, COUNT(pictures.pid) AS cnt
+        FROM events
+        LEFT OUTER JOIN pictures ON pictures.eid=events.eid
+        GROUP BY events.eid HAVING cnt = 0
+        """
+    new_eids = id_map['events'].values()    
+    for idx, row in enumerate(c2.execute(select_sql)):
+        new_eid = row[0]
+        if new_eid not in new_eids: continue
+        c2.execute("DELETE FROM events WHERE eid = ?", (new_eid, ))
+        logging.debug("    events: row deleted (%s)", new_eid)
+
+    logging.debug("done.")
+    c2.close()
 
 ################################################
 # Files
@@ -285,6 +304,7 @@ def main ():
         init_connections()
         output("(1/4) Reading data from importing library...")
         merge_tables()
+        housekeeping()
         output("(2/4) Copying picature files...")
         copy_files()
         output("(3/4) Writing data to main library...")

@@ -61,8 +61,7 @@ see file COPYING, distributed with this program.
 This is free software, and you are welcome to redistribute it
 under certain conditions; see file HACKING for details.
 
-This application is not affiliated with LYTRO, INC.
-Lytro (R) is a trademark of LYTRO, INC. (http://www.lytro.com/)
+Not affiliated with LYTRO, INC.  Lytro (R) is a trademark of LYTRO, INC.
+(http://www.lytro.com/)
 
 Copyright (C) 2012  Behnam Esfahbod.
-
